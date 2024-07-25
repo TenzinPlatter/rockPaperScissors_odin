@@ -1,0 +1,26 @@
+#results-display {
+	display:flex;
+	flex-direction: column;
+	height: 800px;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+button {
+	width: 100px;
+	height: 40px;
+	margin-right: 16px;
+	margin-top: 16px;
+	border-radius: 8px;
+	border-color: none;
+	background: orange;
+}
+
+.buttons-container {
+	display: flex;
+	justify-content: center;
+}
+
+.result-container {
+	border-bottom: 2px dashed blue;
+}
