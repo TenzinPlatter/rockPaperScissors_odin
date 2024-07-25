@@ -10,71 +10,104 @@ function getComputerChoice() {
 	}
 }
 
-function getHumanChoice() {
-	let input = prompt("Please enter your choice: 'rock', 'paper', or 'scissors'");
-
-	while (!["rock", "paper", "scissors"].includes(input)) {
-		input = prompt("Invalid choice, please enter: 'rock', 'paper', or 'scissors'")
-	}
-
-	return input;
-}
-
 function playRound(humanChoice, computerChoice) {
 	// 1: player win, -1: computer win, 0: tie
 	// ignores ties in checks and returns a tie by default if no early return
 
-	console.log(`You played: ${humanChoice}`)
-	console.log(`Computer played: ${computerChoice}`);
+	const resultContainer = document.createElement('div');
+	resultContainer.classList.add("result-container");
+
+	resultContainer.appendChild(getPara(`You played: ${humanChoice}`));
+	resultContainer.appendChild(getPara(`Computer played: ${computerChoice}`));
 
 	if (humanChoice == "rock") {
 		if (computerChoice == "paper") {
-			return -1;
+			return handleResults(-1, resultContainer);
 		}
 		if (computerChoice == "scissors") {
-			return 1;
+			return handleResults(1, resultContainer);
 		}
 	}
 
 	if (humanChoice == "paper") {
 		if (computerChoice == "scissors") {
-			return -1;
+			return handleResults(-1, resultContainer);
 		}
 		if (computerChoice == "rock") {
-			return 1;
+			return handleResults(1, resultContainer);
 		}
 	}
 
 	if (humanChoice == "scissors") {
 		if (computerChoice == "rock") {
-			return -1;
+			return handleResults(-1, resultContainer);
 		}
 		if (computerChoice == "paper") {
-			return 1;
+			return handleResults(1, resultContainer);
 		}
 	}
 
-	return 0;
+	return handleResults(0, resultContainer);
 }
 
-function handleResults(winner) {
+function handleResults(winner, resultContainer) {
 	if (winner == 1) {
 		playerScore++;
-		console.log("You won")
+		resultContainer.appendChild(getPara("You won"));
 	} else if (winner == -1) {
 		computerScore++;
-		console.log("Computer won")
+		resultContainer.appendChild(getPara("Computer won"));
 	} else {
-		console.log("It was a draw");
+		resultContainer.appendChild(getPara("It was a draw"));
 	}
-	console.log(`Player Score: ${playerScore}`)
-	console.log(`Computer Score: ${computerScore}`)
+		resultContainer.appendChild(getPara(`Player Score: ${playerScore}`));
+		resultContainer.appendChild(getPara(`Computer Score: ${computerScore}`));
+
+	if (gameOver()) {
+		const winner = document.createElement("div");
+		winner.classList.add("winner");
+		if (playerScore >= 5) {
+			resultContainer.appendChild(getPara("Congratulations on winning!"));
+		} else {
+			resultContainer.appendChild(getPara("Better luck next time"));
+		}
+	}
+
+	return resultContainer;
+}
+
+function getPara(text) {
+	let para = document.createElement("p");
+	para.textContent = text;
+	return para;
+}
+
+function gameOver() {
+	return playerScore >= 5 || computerScore >= 5;
 }
 
 let playerScore = 0;
 let computerScore = 0;
+let resultsDisplay = document.querySelector("#results-display")
 
-for (let i = 0; i < 5; i++) {
-	let result = playRound(getHumanChoice(), getComputerChoice());
-	handleResults(result)
-}
+let rockBtn = document.querySelector("#rock");
+let paperBtn = document.querySelector("#paper");
+let scissorsBtn = document.querySelector("#scissors");
+
+rockBtn.addEventListener("click", () => {
+	if (!gameOver()) {
+		resultsDisplay.appendChild(playRound("rock", getComputerChoice()));
+	}
+})
+
+paperBtn.addEventListener("click", () => {
+	if (!gameOver()) {
+		resultsDisplay.appendChild(playRound("paper", getComputerChoice()));
+	}
+})
+
+scissorsBtn.addEventListener("click", () => {
+	if (!gameOver()) {
+		resultsDisplay.appendChild(playRound("scissors", getComputerChoice()));
+	}
+})
